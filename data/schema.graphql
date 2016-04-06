@@ -1,0 +1,103 @@
+type Address implements Node {
+  id: ID!
+  description: String
+  address: String
+  is_billing_address: Boolean
+  is_active: Boolean
+  services(after: String, first: Int, before: String, last: Int): ServiceConnection
+  recurring_services: [RecurringService]
+}
+
+type Customer implements Node {
+  id: ID!
+  name: String
+  billing_address: Address
+  addresses: [Address]
+  payments(after: String, first: Int, before: String, last: Int): PaymentConnection
+  invoices(after: String, first: Int, before: String, last: Int): InvoiceConnection
+  is_active: Boolean
+}
+
+type Invoice implements Node {
+  id: ID!
+  start: String
+  end: String
+  services(after: String, first: Int, before: String, last: Int): ServiceConnection
+}
+
+type InvoiceConnection {
+  pageInfo: PageInfo!
+  edges: [InvoiceEdge]
+}
+
+type InvoiceEdge {
+  node: Invoice
+  cursor: String!
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Payment implements Node {
+  id: ID!
+  type: String
+  description: String
+  amount: Float
+  date: String
+}
+
+type PaymentConnection {
+  pageInfo: PageInfo!
+  edges: [PaymentEdge]
+}
+
+type PaymentEdge {
+  node: Payment
+  cursor: String!
+}
+
+type Query {
+  viewer: Viewer
+  customers: [Customer]
+  node(id: ID!): Node
+}
+
+type RecurringService implements Node {
+  id: ID!
+  description: String
+  cost: Float
+  day: Int
+  week: String
+  month: Int
+  type: String
+}
+
+type Service implements Node {
+  id: ID!
+  description: String
+  cost: Float
+  start: String
+  end: String
+}
+
+type ServiceConnection {
+  pageInfo: PageInfo!
+  edges: [ServiceEdge]
+}
+
+type ServiceEdge {
+  node: Service
+  cursor: String!
+}
+
+type Viewer {
+  customers: [Customer]
+}
