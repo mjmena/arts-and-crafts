@@ -6,7 +6,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?https://aac-sql-mjmena.c9users.io:8080/',
     'webpack/hot/only-dev-server',
-    './src/app'
+    './src/App'
   ],
   output: {
     path: path.join(__dirname, 'dist'),

@@ -288,6 +288,14 @@ let schema = new GraphQLSchema({
                     return knex.select().from('Customer');
                 }
             },
+            customer: {
+                type: CustomerType,
+                resolve: (root) => {
+                    return knex.select().from('Customer').then((customers) => {
+                        return customers[0];
+                    })
+                }
+            },
             node: nodeField
         }
     })

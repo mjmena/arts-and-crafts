@@ -41,6 +41,18 @@
               "deprecationReason": null
             },
             {
+              "name": "customer",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Customer",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "node",
               "description": "Fetches an object given its ID",
               "args": [

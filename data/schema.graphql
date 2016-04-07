@@ -67,6 +67,7 @@ type PaymentEdge {
 type Query {
   viewer: Viewer
   customers: [Customer]
+  customer: Customer
   node(id: ID!): Node
 }
 
