@@ -17,6 +17,7 @@ import { introspectionQuery, printSchema } from 'graphql/utilities';
       path.join(__dirname, '../data/schema.json'),
       JSON.stringify(result, null, 2)
     );
+    console.log('Finished')
   }
 })();
 

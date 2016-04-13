@@ -5,14 +5,24 @@ type Address implements Node {
   is_billing_address: Boolean
   is_active: Boolean
   services(after: String, first: Int, before: String, last: Int): ServiceConnection
-  recurring_services: [RecurringService]
+  recurring_services(after: String, first: Int, before: String, last: Int): RecurringServiceConnection
+}
+
+type AddressConnection {
+  pageInfo: PageInfo!
+  edges: [AddressEdge]
+}
+
+type AddressEdge {
+  node: Address
+  cursor: String!
 }
 
 type Customer implements Node {
   id: ID!
   name: String
   billing_address: Address
-  addresses: [Address]
+  addresses(after: String, first: Int, before: String, last: Int): AddressConnection
   payments(after: String, first: Int, before: String, last: Int): PaymentConnection
   invoices(after: String, first: Int, before: String, last: Int): InvoiceConnection
   is_active: Boolean
@@ -79,6 +89,16 @@ type RecurringService implements Node {
   week: String
   month: Int
   type: String
+}
+
+type RecurringServiceConnection {
+  pageInfo: PageInfo!
+  edges: [RecurringServiceEdge]
+}
+
+type RecurringServiceEdge {
+  node: RecurringService
+  cursor: String!
 }
 
 type Service implements Node {

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node server",
     "refresh-database": "node data/populate",
-    "update-schema": "babel-node build/updateSchema.js"
+    "refresh-schema": "babel-node build/updateSchema.js"
   },
   "author": "Martin J. Mena",
   "license": "ISC",

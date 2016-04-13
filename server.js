@@ -17,6 +17,7 @@ graphql_server.listen(8081, function() {
 });
 
 new WebpackDevServer(webpack(config), {
+  stats: 'errors-only',
   publicPath: config.output.publicPath,
   proxy: {'/graphql': 'http://localhost:8081'},
   hot: true,

@@ -150,6 +150,14 @@ let RecurringServiceType = new GraphQLObjectType({
     interfaces: [nodeInterface]
 })
 
+const {
+    connectionType: RecurringServiceConnection,
+    edgeType: RecurringServiceEdge
+} = connectionDefinitions({
+    name: 'RecurringService',
+    nodeType: RecurringServiceType
+});
+
 const InvoiceType = new GraphQLObjectType({
     name: 'Invoice',
     fields: {
@@ -206,15 +214,24 @@ const AddressType = new GraphQLObjectType({
             }
         },
         recurring_services: {
-            type: new GraphQLList(RecurringServiceType),
+            type: RecurringServiceConnection,
+            args: connectionArgs,
             resolve: (address, args) => {
                 var query = knex.select().from('RecurringService').where('address_id', address.id);
-                return query;
+                return connectionFromPromisedArray(query, args);
             }
         }
     },
     interfaces: [nodeInterface]
 })
+
+const {
+    connectionType: AddressConnection,
+    edgeType: AddressEdge
+} = connectionDefinitions({
+    name: 'Address',
+    nodeType: AddressType
+});
 
 const CustomerType = new GraphQLObjectType({
     name: 'Customer',
@@ -230,11 +247,13 @@ const CustomerType = new GraphQLObjectType({
                 return query.then((rows) => rows[0]);
             }
         },
+        
         addresses: {
-            type: new GraphQLList(AddressType),
-            resolve: (customer) => {
+            type: AddressConnection,
+            args: connectionArgs,
+            resolve: (customer, args) => {
                 let query = knex.select().from('Address').where('Address.customer_id', customer.id)
-                return query;
+                return connectionFromPromisedArray(query, args)
             }
         },
         payments: {

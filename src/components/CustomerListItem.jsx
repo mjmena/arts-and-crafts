@@ -1,15 +1,16 @@
 import React from 'react';
 
 import Relay from 'react-relay';
-import Address from './Address';
+import {Link} from 'react-router';
 
 class CustomerListItem extends React.Component {
   render() {
+    const customer = this.props.customer;
     return (
       <div>
-        <h2>Customer</h2>
-        {this.props.customer.name}
-        <Address address={this.props.customer.billing_address} />
+        <Link to={`/customer/${customer.id}`}>
+          {customer.name}
+        </Link>
       </div>
     );
   }
@@ -19,11 +20,8 @@ export default Relay.createContainer(CustomerListItem, {
   fragments: {
     customer: () => Relay.QL `
       fragment on Customer {
+        id
         name
-        billing_address{
-            id
-            ${Address.getFragment('address')}
-        }
       }`
   },
 });
