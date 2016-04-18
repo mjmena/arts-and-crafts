@@ -1,3 +1,14 @@
+input AddCustomerInput {
+  name: String!
+  clientMutationId: String!
+}
+
+type AddCustomerPayload {
+  viewer: Viewer
+  customer: Customer
+  clientMutationId: String!
+}
+
 type Address implements Node {
   id: ID!
   description: String
@@ -21,7 +32,6 @@ type AddressEdge {
 type Customer implements Node {
   id: ID!
   name: String
-  billing_address: Address
   addresses(after: String, first: Int, before: String, last: Int): AddressConnection
   payments(after: String, first: Int, before: String, last: Int): PaymentConnection
   invoices(after: String, first: Int, before: String, last: Int): InvoiceConnection
@@ -43,6 +53,10 @@ type InvoiceConnection {
 type InvoiceEdge {
   node: Invoice
   cursor: String!
+}
+
+type Mutation {
+  addCustomer(input: AddCustomerInput!): AddCustomerPayload
 }
 
 interface Node {
@@ -76,8 +90,6 @@ type PaymentEdge {
 
 type Query {
   viewer: Viewer
-  customers: [Customer]
-  customer: Customer
   node(id: ID!): Node
 }
 
