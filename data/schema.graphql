@@ -1,3 +1,16 @@
+input AddAddressInput {
+  customer_id: ID!
+  description: String!
+  location: String!
+  is_billing_address: Boolean!
+  clientMutationId: String!
+}
+
+type AddAddressPayload {
+  address: Address
+  clientMutationId: String!
+}
+
 input AddCustomerInput {
   name: String!
   clientMutationId: String!
@@ -57,6 +70,7 @@ type InvoiceEdge {
 
 type Mutation {
   addCustomer(input: AddCustomerInput!): AddCustomerPayload
+  addAddress(input: AddAddressInput!): AddAddressPayload
 }
 
 interface Node {
@@ -132,5 +146,6 @@ type ServiceEdge {
 }
 
 type Viewer {
+  id: ID!
   customers: [Customer]
 }

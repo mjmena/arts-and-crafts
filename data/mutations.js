@@ -1,17 +1,23 @@
 import {
+    GraphQLBoolean,
+    GraphQLID,
     GraphQLObjectType,
     GraphQLString,
     GraphQLNonNull
 }
 from 'graphql';
-import {mutationWithClientMutationId} from 'graphql-relay';
-import {ViewerType, CustomerType} from './types'
+import {
+  fromGlobalId,
+  mutationWithClientMutationId
+} from 'graphql-relay';
+import {ViewerType, CustomerType, AddressType} from './types'
 
 import {
-    add_customer
+    add_customer,
+    add_address
 } from './database'
 
-const addCustomerMutation = mutationWithClientMutationId({
+const AddCustomerMutation = mutationWithClientMutationId({
   name: 'AddCustomer',
   inputFields: {
     name: {
@@ -28,7 +34,6 @@ const addCustomerMutation = mutationWithClientMutationId({
     customer: {
       type: CustomerType,
       resolve: (payload) => {
-        console.log(payload)
         return payload
       }
     }
@@ -38,10 +43,40 @@ const addCustomerMutation = mutationWithClientMutationId({
   }
 });
 
+const AddAddressMutation = mutationWithClientMutationId({
+  name: 'AddAddress',
+  inputFields: {
+    customer_id: {
+      type: new GraphQLNonNull(GraphQLID)
+    },
+    description: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    location: {
+      type: new GraphQLNonNull(GraphQLString)
+    },
+    is_billing_address: {
+      type: new GraphQLNonNull(GraphQLBoolean)
+    }
+  },
+  outputFields: {
+    address: {
+      type: AddressType,
+      resolve: (payload) => {
+        return payload
+      }
+    }
+  },
+  mutateAndGetPayload: ({customer_id, description, location, is_billing_address}) => {
+    var {type, id} = fromGlobalId(customer_id);
+    return add_address(id, description, location, is_billing_address);
+  }
+});
 
 export default new GraphQLObjectType({
     name: 'Mutation',
     fields: {
-        addCustomer: addCustomerMutation
+        addCustomer: AddCustomerMutation,
+        addAddress: AddAddressMutation
     }
 });

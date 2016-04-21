@@ -17,8 +17,23 @@ export const add_customer = (name) => {
     .then((id)=>get_customer(id));
 }
 
+export const add_address = (customer_id, description, location, is_billing_address) => {
+    return knex.insert({
+        customer_id: customer_id,
+        description: description,
+        address: location,
+        is_billing_address: is_billing_address, 
+        is_active: true
+    }).into('Address')
+    .then((id)=>get_address(id));
+}
+
 export const get_addresses_of_customer = (customer_id) => {
     return knex.select().from('Address').where('Address.customer_id', customer_id)
+}
+
+export const get_address = (address_id) => {
+    return knex.select().from('Address').where('Address.id', address_id)
 }
 
 export const get_customer = (id) => {

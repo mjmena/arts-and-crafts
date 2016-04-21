@@ -263,6 +263,7 @@ export const CustomerType = new GraphQLObjectType({
 export const ViewerType = new GraphQLObjectType({
     name: 'Viewer',
     fields: {
+        id: globalIdField('Viewer'),
         customers: {
             type: new GraphQLList(CustomerType),
             resolve: () => {

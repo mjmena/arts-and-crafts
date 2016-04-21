@@ -14,7 +14,7 @@ export default new GraphQLSchema({
             viewer: {
                 type: ViewerType,
                 resolve: (root) => {
-                    return {}
+                    return {id:0}
                 }
             },
             node: nodeField
