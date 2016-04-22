@@ -217,7 +217,7 @@ export const AddressType = new GraphQLObjectType({
     interfaces: [nodeInterface]
 })
 
-const {
+export const {
     connectionType: AddressConnection,
     edgeType: AddressEdge
 } = connectionDefinitions({
@@ -260,14 +260,23 @@ export const CustomerType = new GraphQLObjectType({
     interfaces: [nodeInterface]
 });
 
+export const {
+    connectionType: CustomerConnection,
+    edgeType: CustomerEdge
+} = connectionDefinitions({
+    name: 'Customer',
+    nodeType: CustomerType
+});
+
 export const ViewerType = new GraphQLObjectType({
     name: 'Viewer',
     fields: {
         id: globalIdField('Viewer'),
         customers: {
-            type: new GraphQLList(CustomerType),
-            resolve: () => {
-                return get_customers();
+            type: CustomerConnection,
+            args: connectionArgs,
+            resolve: (parent, args) => {
+                return connectionFromPromisedArray(get_customers(), args);
             }
         },
     }

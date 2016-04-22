@@ -6,15 +6,19 @@ import {
     GraphQLNonNull
 }
 from 'graphql';
+
 import {
+  offsetToCursor,
   fromGlobalId,
   mutationWithClientMutationId
 } from 'graphql-relay';
-import {ViewerType, CustomerType, AddressType} from './types'
+import {ViewerType, CustomerEdge, AddressEdge} from './types'
 
 import {
     add_customer,
-    add_address
+    add_address,
+    get_addresses_of_customer,
+    get_customers
 } from './database'
 
 const AddCustomerMutation = mutationWithClientMutationId({
@@ -28,13 +32,28 @@ const AddCustomerMutation = mutationWithClientMutationId({
     viewer: {
         type: ViewerType,
         resolve: (payload) => {
-            return {};
+            return {id:0};
         }
     },
-    customer: {
-      type: CustomerType,
+    customerEdge: {
+      type: CustomerEdge,
       resolve: (payload) => {
-        return payload
+        let offset = 0; 
+        console.log(payload.id);
+        get_customers().then((customers)=> {
+            customers.find((customer, index)=>{
+              if(customer.id === payload.id){
+                offset = index; 
+                return true;
+              }else{
+                return false;
+              }
+            })
+        })
+        return {
+          cursor: offsetToCursor(offset),
+          node: payload,
+        };
       }
     }
   },
@@ -60,10 +79,31 @@ const AddAddressMutation = mutationWithClientMutationId({
     }
   },
   outputFields: {
-    address: {
-      type: AddressType,
+    viewer: {
+        type: ViewerType,
+        resolve: (payload) => {
+            return {id:0};
+        }
+    },
+    addressEdge: {
+      type: AddressEdge,
       resolve: (payload) => {
-        return payload
+        let offset = 0; 
+        console.log(payload.id);
+        get_addresses_of_customer(payload.customer_id).then((addresses)=> {
+            addresses.find((address, index)=>{
+              if(address.id === payload.id){
+                offset = index; 
+                return true;
+              }else{
+                return false;
+              }
+            })
+        })
+        return {
+          cursor: offsetToCursor(offset),
+          node: payload,
+        };
       }
     }
   },

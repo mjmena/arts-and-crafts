@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
   devtool: 'eval',
   entry: [
-    'webpack-dev-server/client?https://aac-sql-mjmena.c9users.io:8080/',
+    'webpack-dev-server/client?https://aac-mjmena.c9users.io:8080/',
     'webpack/hot/only-dev-server',
     './src/App'
   ],

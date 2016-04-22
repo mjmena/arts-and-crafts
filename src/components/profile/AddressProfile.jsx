@@ -6,6 +6,7 @@ class AddressProfile extends React.Component {
   render() {
     return (
       <div>
+        <h3>{this.props.address.description}</h3>
         {this.props.address.address}
         <div style={{marginLeft:10}}>
           <ServiceProfileList services={this.props.address.services}/>

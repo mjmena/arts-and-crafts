@@ -52,40 +52,42 @@ class AddCustomer extends React.Component {
     handleSubmit = (event) => {
         const customer = this.state.immutable;
         
-        let onFailure = (response) => {
-            console.log('Failure! ' + response);
+        let onFailure = (transaction) => {
+            console.log('Failure!' + JSON.stringify(transaction.getError().source));
         };
         
         let onSuccess = (response) => {
             console.log('Successfully added Customer!');
-            
+            console.log(response.addCustomer.customerEdge.node.id)
             customer.get('addresses').forEach((address) => {
-                console.log(address.toString());
                 Relay.Store.commitUpdate(
                     new AddAddressMutation({
-                        customer_id: response.addCustomer.customer.id,
+                        customer_id: response.addCustomer.customerEdge.node.id,
                         description: address.get('description'),
                         location: address.get('location'),
                         is_billing_address: address.get('is_billing_address')
-                    }), {onFailure,onSuccess: (response) =>{
-                        console.log(response);
-                    }}
+                    }), {
+                        onFailure:onFailure,
+                        onSuccess: (response) =>{
+                            console.log(response.addAddress.addressEdge.node.id);
+                        }}
                 ) 
             });
             
             browserHistory.push(`/`);
         };
         
-
+    console.log(this.props.viewer); 
         Relay.Store.commitUpdate(
+            
             new AddCustomerMutation({
                 viewer_id: this.props.viewer.id,
                 name: customer.get('name')
             }), {
-                onFailure, onSuccess
+                onSuccess: onSuccess, onFailure: onFailure
             }
         );
-    }
+    }   
 
     addAddress = (event) => {
         this.setState({

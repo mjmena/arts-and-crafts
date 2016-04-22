@@ -13,37 +13,38 @@ export default class AddCustomerMutation extends Relay.Mutation {
 
     getConfigs() {
         return [
-        // {
-        //     type: 'RANGE_ADD',
-        //     parentName: 'Viewer',
-        //     parentID: this.props.viewer_id,
-        //     connectionName: 'customers',
-        //     edgeName: 'CustomerEdge',
-        //     rangeBehaviors: {
-        //       '': 'append',
-        //     }
-        //     ,
-        // },
+        {
+            type: 'RANGE_ADD',
+            parentName: 'viewer',
+            parentID: this.props.viewer_id,
+            connectionName: 'customers',
+            edgeName: 'CustomerEdge',
+            rangeBehaviors: {
+              '': 'append',
+            }
+            ,
+        },
         {
             type: 'REQUIRED_CHILDREN',
             children: [Relay.QL `
-            fragment on AddCustomerPayload {
-                customer{
-                    id
+                fragment on AddCustomerPayload {
+                    customerEdge{
+                        node{
+                            id
+                        }
+                    }
                 }
-            }`],
+            `],
         }];
     }
 
     getFatQuery() {
         return Relay.QL `
           fragment on AddCustomerPayload {
-            customer{
-                id
-            }
             viewer{
                 customers
             }
+            customerEdge
           }
         `;
     }

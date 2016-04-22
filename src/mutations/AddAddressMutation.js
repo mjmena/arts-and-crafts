@@ -8,19 +8,39 @@ export default class AddAddressMutation extends Relay.Mutation {
   
   getFatQuery() {
     return Relay.QL`
-      fragment on AddAddressPayload {
-        address
+      fragment on AddAddressPayload @relay(pattern: true) {
+        viewer{
+          customers{
+            edges{
+              node{
+                addresses  
+              }
+            }
+          }
+        }
+        addressEdge
       }
     `;
   }
   
   getConfigs() {
     return [{
+      type: 'RANGE_ADD',
+      parentName: 'customers',
+      parentID: this.props.customer_id,
+      connectionName: 'addresses',
+      edgeName: 'AddressEdge',
+      rangeBehaviors: {
+        '': 'append',
+      }
+    },{
       type: 'REQUIRED_CHILDREN',
       children: [Relay.QL `
         fragment on AddAddressPayload {
-          address{
-            id
+          addressEdge{
+            node{
+              id
+            }
           }
         }
       `]

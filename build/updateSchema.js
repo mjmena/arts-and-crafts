@@ -20,3 +20,5 @@ fs.writeFileSync(
   `${yourSchemaPath}.graphql`,
   printSchema(schema)
 );
+
+console.log('Finished updating schema')

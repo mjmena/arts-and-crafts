@@ -5,9 +5,10 @@ import CustomerListItem from './CustomerListItem'
 
 class CustomerList extends React.Component {
   render() {
-    let customers = this.props.viewer.customers.map(customer => {
+    let customers = this.props.viewer.customers.edges.map((edge, index) => {
+      const customer = edge.node; 
       return (
-        <div key={customer.id}>
+        <div key={index}>
             <CustomerListItem customer={customer}/>
         </div>
       )
@@ -26,9 +27,13 @@ export default Relay.createContainer(CustomerList, {
   fragments: {
     viewer: () => Relay.QL `
       fragment on Viewer {
-        customers{
-          id
-          ${CustomerListItem.getFragment('customer')}
+        id
+        customers(first: 50){
+          edges{ 
+            node{
+              ${CustomerListItem.getFragment('customer')}
+            }
+          }
         }
       }`
   },

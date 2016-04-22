@@ -9,7 +9,12 @@ var graphql_server = express();
 graphql_server.use("/", graphqlHTTP({
     schema: schema,
     graphiql: true,
-    prettify: true
+    prettify: true,
+    formatError: error => ({
+      message: error.message,
+      locations: error.locations,
+      stack: error.stack
+    })
 }));
 
 graphql_server.listen(8081, function() {
